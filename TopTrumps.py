@@ -83,14 +83,22 @@ def createCards(nameList):
         
     return deck
 
-def spiltList(savedList):
-    outputList1 = [[],[],[],[],[]]
-    outputList2 = [[],[],[],[],[]]
-    for i in range(len(savedList[1])):
-        for t in range(len(savedList[1])/2):
+def cardShuffle(shuffledList): #shuffle the card
+    random.shuffle(shuffledList)
+    return shuffledList
+
+def pickFromList(shuffledCard,card_Num):
+    return shuffledCard[:card_Num]
+
+def spiltCardInHalf():
 
 menu() #some user can quit at this point
-while cardNum() == "error": #return to menu if there are error input
+card_Num = cardNum()
+while card_Num == "error": #return to menu if there are error input
     menu()
-savedList = createCards(nameList())
-print(savedList)
+    card_Num = cardNum()
+
+savedList = createCards(nameList()) #list of all information of dogs (randomised)
+shuffledCard = cardShuffle(savedList)
+lessCard = pickFromList(shuffledCard,card_Num) #amount of card that user picked
+spiltedCard = spiltCardInHalf(less)
