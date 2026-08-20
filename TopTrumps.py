@@ -90,15 +90,28 @@ def cardShuffle(shuffledList): #shuffle the card
 def pickFromList(shuffledCard,card_Num):
     return shuffledCard[:card_Num]
 
-def spiltCardInHalf():
+def spiltCardInHalf(lessCard):
+    mid = len(lessCard) // 2
+    playerCard = lessCard[:mid]
+    botCard = lessCard[mid:]
+    return playerCard,botCard
+
+def printOneCard(input_dict):
+    print()
+    # printing using For Loop
+    for key, value in input_dict.items():
+        print(f"{key}: {value}")
 
 menu() #some user can quit at this point
 card_Num = cardNum()
 while card_Num == "error": #return to menu if there are error input
     menu()
     card_Num = cardNum()
-
 savedList = createCards(nameList()) #list of all information of dogs (randomised)
 shuffledCard = cardShuffle(savedList)
 lessCard = pickFromList(shuffledCard,card_Num) #amount of card that user picked
-spiltedCard = spiltCardInHalf(less)
+playerCard,botCard = spiltCardInHalf(lessCard) #separate player card and bot card
+printOneCard(playerCard[0]) #show play the player's card
+
+
+input("code runned successfully!")
