@@ -97,10 +97,26 @@ def spiltCardInHalf(lessCard):
     return playerCard,botCard
 
 def printOneCard(input_dict):
-    print()
+    print("\n-----CARD-----")
     # printing using For Loop
     for key, value in input_dict.items():
         print(f"{key}: {value}")
+
+def inputCategory():
+    while True: #keep repeating until user enter correct input
+        category = input("""
+    1. Exercise
+    2. Intelligence
+    3. Friendliness
+    4. Drool
+Input a category [1-4]:
+""")
+        if category == "1" or category == "2" or category == "3" or category == "4":
+            category = int(category)
+            return category
+        else:
+            print("invaild input!")
+    
 
 menu() #some user can quit at this point
 card_Num = cardNum()
@@ -111,7 +127,9 @@ savedList = createCards(nameList()) #list of all information of dogs (randomised
 shuffledCard = cardShuffle(savedList)
 lessCard = pickFromList(shuffledCard,card_Num) #amount of card that user picked
 playerCard,botCard = spiltCardInHalf(lessCard) #separate player card and bot card
-printOneCard(playerCard[0]) #show play the player's card
+printOneCard(playerCard[0]) #show one of the player's card
+categoryInput = inputCategory()
+printOneCard(botCard[0])
 
 
 input("code runned successfully!")
