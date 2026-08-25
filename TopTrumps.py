@@ -105,6 +105,7 @@ def printOneCard(input_dict):
 def inputCategory():
     while True: #keep repeating until user enter correct input
         category = input("""
+-----CATEGORY-----
     1. Exercise
     2. Intelligence
     3. Friendliness
@@ -116,8 +117,12 @@ Input a category [1-4]:
             return category
         else:
             print("invaild input!")
-    
 
+
+def calCategory(categoryInput,playerCard,botCard): #compare value between com and user
+    if categoryInput == 1: #compare exercise, higher win
+        
+        
 menu() #some user can quit at this point
 card_Num = cardNum()
 while card_Num == "error": #return to menu if there are error input
@@ -127,9 +132,18 @@ savedList = createCards(nameList()) #list of all information of dogs (randomised
 shuffledCard = cardShuffle(savedList)
 lessCard = pickFromList(shuffledCard,card_Num) #amount of card that user picked
 playerCard,botCard = spiltCardInHalf(lessCard) #separate player card and bot card
-printOneCard(playerCard[0]) #show one of the player's card
-categoryInput = inputCategory()
-printOneCard(botCard[0])
+#loop game until someone have 0 card
+for i in range (card_Num//2):
+    printOneCard(playerCard[i]) #show one of the player's card
+    categoryInput = inputCategory()
+    printOneCard(botCard[i])
+    calCategory(categoryInput,playerCard[i],botCard[i])
 
 
 input("code runned successfully!")
+
+"""
+work to do:
+make code loop until someone have 0 card (someone lost) (IMPORTANT)
+complete def calCategory
+"""
