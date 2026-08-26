@@ -23,10 +23,6 @@ Enter Your Option [1/2]: """
         print("Game quitting...")
         time.sleep(1)
         quit()
-    else:
-        print(f"congratulations!! You just find a bug in my code, pls report the input ({choice}) that you entered to the developer of this program.")
-        input()
-        quit()
 
 def cardNum():
     #lot of error message
