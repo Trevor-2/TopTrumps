@@ -28,8 +28,8 @@ def cardNum():
     #lot of error message
     inputQuestion = "Input a even number of cards between 4 - 30: "
     numberError = "Input must be a number."
-    lowError = "Input should be greater than 4."
-    highError = "Input should be less than 30."
+    lowError = "Input should be greater or equal 4."
+    highError = "Input should be less or equal 30."
     oddError = "Input can't be odd number."
 
     #check if there are error
