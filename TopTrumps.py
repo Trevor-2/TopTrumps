@@ -60,9 +60,8 @@ def cardNum():
 
 def nameList(): #easily read name from file
     nameList = []
-    f = open("dogs.txt")
-    rawList = f.readlines()
-    f.close()
+    with open("dogs.txt") as f:
+        rawList = f.readlines()
     for name in rawList:
         nameList.append(name.strip())
     return nameList
