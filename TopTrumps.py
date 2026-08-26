@@ -1,5 +1,7 @@
 import time
 import random
+import os
+import urllib.request
 
 def menu():
     menu = """
@@ -60,6 +62,18 @@ def cardNum():
 
 def nameList(): #easily read name from file
     nameList = []
+    # 設定本地儲存的檔案名稱與 GitHub Raw 檔案網址
+    LOCAL_FILE = "dogs.txt"
+    GITHUB_RAW_URL = "https://raw.githubusercontent.com/Trevor-2/TopTrumps/refs/heads/main/dogs.txt"
+    # 檢查檔案是否已存在
+    if not os.path.exists(LOCAL_FILE):
+        print(f"'{LOCAL_FILE}' is lost. Downloading from Github...")
+        try:
+            # 執行下載並儲存至本地
+            urllib.request.urlretrieve(GITHUB_RAW_URL, LOCAL_FILE)
+            print("Download Done!")
+        except Exception as e:
+            print(f"Download Failed. Reason: {e}")
     with open("dogs.txt") as f:
         rawList = f.readlines()
     for name in rawList:
