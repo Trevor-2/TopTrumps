@@ -172,19 +172,19 @@ while True:
     savedList = createCards(nameList()) #list of all information of dogs (randomised)
     shuffledCard = cardShuffle(savedList)
     lessCard = pickFromList(shuffledCard,card_Num) #amount of card that user picked
-    playerCard,botCard = spiltCardInHalf(lessCard) #separate player card and bot card
+    cardPile1,cardPile2 = spiltCardInHalf(lessCard) #separate player card and bot card
     print("\nTIPS: PICK THE LARGEST CATEGORY!!") #very nice tips message
     time.sleep(2)
     #loop game until someone have 0 card
-    while len(playerCard) != 0 and len(botCard) != 0:
-        printCardCount(playerCard,botCard)
-        printOneCard(playerCard[0],winner) #show one of the player's card
+    while len(cardPile1) != 0 and len(cardPile2) != 0:
+        printCardCount(cardPile1,cardPile2)
+        printOneCard(cardPile1[0],winner) #show one of the player's card
         categoryInput = inputCategory()
-        printOneCard(botCard[0],notWinner)
-        playerCard,botCard = calCategory(categoryInput,playerCard[0],botCard[0],playerCard,botCard)
+        printOneCard(cardPile2[0],notWinner)
+        cardPile1,cardPile2 = calCategory(categoryInput,cardPile1[0],cardPile2[0],cardPile1,cardPile2)
     time.sleep(1)
     print() #empty line
-    if len(playerCard) != 0:
+    if len(cardPile1) != 0:
 
         print("You Win! You have all card in game now!! Well done;)")
         winner = "human"
