@@ -15,7 +15,7 @@ Enter Your Option [1/2]: """
     choice = input(menu)
     while choice != "1" and choice != "2":
         print(error)
-        time.sleep(0.3)
+        time.sleep(0.5)
         choice = input(menu)
     if choice == "1":
         return
@@ -101,25 +101,23 @@ def pickFromList(shuffledCard,card_Num):
 
 def spiltCardInHalf(lessCard):
     mid = len(lessCard) // 2
-    playerCard = lessCard[:mid]
-    botCard = lessCard[mid:]
-    return playerCard,botCard
+    winnerCard = lessCard[:mid]
+    notwinnerCard = lessCard[mid:]
+    return winnerCard,notwinnerCard
 
-def printCardCount(playerCardList,botCardList):
-        print(f"""
+def printCardCount(card_winner,card_notwinner):
+    print(f"""
 -----CARD COUNT-----
-    You: {len(playerCardList)}
-    Bot: {len(botCardList)}""")
+    You: {len(card_winner)}
+    Bot: {len(card_notwinner)}""")
+    time.sleep(0.5)
 
 def printOneCard(input_dict,role): #now gonna use for show option
     count = 0
-    time.sleep(0.3)
     if role == "human":
         print("\n-----YOUR CARD-----")
-    elif role == "bot":
+    else: #role = bot
         print("\n-----BOT CARD-----")
-    else:
-        print("\n-----CARD-----")
     # printing using For Loop
     for key, value in input_dict.items():
         if count < 1:
@@ -132,37 +130,68 @@ def printOneCard(input_dict,role): #now gonna use for show option
 def inputCategory():
     while True: #keep repeating until user enter correct input
         time.sleep(0.5)
-        category = input("Guess a category that is larger than bot's [1-4]: ")
+        category = input("Guess a category [1-4]: ")
         if category == "1" or category == "2" or category == "3" or category == "4":
             category = int(category)
             return category
         else:
             print("invaild input!")
 
+def turn_numInput_to_text(categoryInput):
+    if categoryInput == 1:
+        categoryInput = "exercise"
+    if categoryInput == 2:
+        categoryInput = "intelligence"
+    if categoryInput == 3:
+        categoryInput = "friendliness"
+    if categoryInput == 4:
+        categoryInput = "drool"
+    return categoryInput
 
-def calCategory(categoryInput,playerCardComparing,botCardComparing,
-                playerCardList,botCardList): #compare value between com and user
-    #if player win
-    if (categoryInput == 1 and playerCardComparing['exercise'] >= botCardComparing['exercise'] or
-        categoryInput == 2 and playerCardComparing['intelligence'] >= botCardComparing['intelligence'] or
-        categoryInput == 3 and playerCardComparing['friendliness'] >= botCardComparing['friendliness'] or
-        categoryInput == 4 and playerCardComparing['drool'] <= botCardComparing['drool']):
-    #give bot card to player
-        playerCardList.append(botCardComparing)
-        botCardList.remove(botCardComparing)
-        time.sleep(0.3)
-        print("\nYou win!! One card moved to your pile.")
-    #if bot win, player card will give to bot
+def compare_result(categoryInput,cardComparing_winner,cardComparing_notwinner,winner,winner_this_round):
+    if winner == "human":
+        print (f"""    
+-----YOUR CARD vs BOT CARD-----
+    Your {categoryInput}: {cardComparing_winner[categoryInput]}
+    Bot {categoryInput}: {cardComparing_notwinner[categoryInput]}""")
     else:
-        botCardList.append(playerCardComparing)
-        playerCardList.remove(playerCardComparing)
-        time.sleep(0.3)
-        print("\nYou lost... One card moved to bot pile.")
-    time.sleep(1)
-    return playerCardList,botCardList
+        print (f"""    
+    Your {categoryInput}: {cardComparing_notwinner[categoryInput]}
+    Bot {categoryInput}: {cardComparing_winner[categoryInput]}""")
+    time.sleep(0.5)
+    if winner_this_round == "human":
+        print(f"\nYou Win!! You have more {categoryInput}:)")
+    else:
+        print(f"\nYou lost!! You have less {categoryInput}:(")
+    time.sleep(2)
 
-winner = "human"
-notWinner = "bot"
+def calCategory(categoryInput,winner,card_winner,card_notwinner,cardComparing_winner,cardComparing_notwinner): #compare value between com and user
+    if winner == "human":
+        #if human win, and winner last rount is human
+        if (cardComparing_winner[categoryInput] >= cardComparing_notwinner[categoryInput] and categoryInput != "drool" or
+            cardComparing_winner[categoryInput] <= cardComparing_notwinner[categoryInput] and categoryInput == "drool"):
+        #give give bot card to human
+            card_winner += [cardComparing_winner,cardComparing_notwinner]
+            winner_this_round = "human"
+        #if human lost, and winner last rount is human
+        else:
+            card_notwinner += [cardComparing_winner,cardComparing_notwinner]
+            winner_this_round = "bot" #give human card to bot
+    else:
+        #if not bot win, and winner last rount is bot (human win anyway)
+        if not (cardComparing_winner[categoryInput] >= cardComparing_notwinner[categoryInput] and categoryInput != "drool" or
+                cardComparing_winner[categoryInput] <= cardComparing_notwinner[categoryInput] and categoryInput == "drool"):
+        #give bot card to human
+            card_notwinner += [cardComparing_winner,cardComparing_notwinner]
+            winner_this_round = "human"
+        else:
+            card_winner += [cardComparing_winner,cardComparing_notwinner]
+            winner_this_round = "bot"
+    time.sleep(0.5)
+    return card_winner,card_notwinner,winner_this_round
+
+winner = "human" #testing human
+notWinner = "bot" #testing bot
 while True:        
     menu() #some user can quit at this point
     card_Num = cardNum()
@@ -172,19 +201,25 @@ while True:
     savedList = createCards(nameList()) #list of all information of dogs (randomised)
     shuffledCard = cardShuffle(savedList)
     lessCard = pickFromList(shuffledCard,card_Num) #amount of card that user picked
-    cardPile1,cardPile2 = spiltCardInHalf(lessCard) #separate player card and bot card
-    print("\nTIPS: PICK THE LARGEST CATEGORY!!") #very nice tips message
+    card_winner,card_notwinner = spiltCardInHalf(lessCard) #separate player card and bot card
+    print("\nTIPS: PICK THE CATEGORY YOU THINK IS STRONGEST!!") #very nice tips message
     time.sleep(2)
     #loop game until someone have 0 card
-    while len(cardPile1) != 0 and len(cardPile2) != 0:
-        printCardCount(cardPile1,cardPile2)
-        printOneCard(cardPile1[0],winner) #show one of the player's card
+    while len(card_winner) != 0 and len(card_notwinner) != 0:
+        printCardCount(card_winner,card_notwinner)
+        cardComparing_winner = card_winner.pop(0)
+        cardComparing_notwinner = card_notwinner.pop(0)
+        printOneCard(cardComparing_winner,winner) #show winner card
         categoryInput = inputCategory()
-        printOneCard(cardPile2[0],notWinner)
-        cardPile1,cardPile2 = calCategory(categoryInput,cardPile1[0],cardPile2[0],cardPile1,cardPile2)
-    time.sleep(1)
+        categoryInput = turn_numInput_to_text(categoryInput)
+        card_winner,card_notwinner,winner_this_round = calCategory(categoryInput,winner,card_winner,card_notwinner,cardComparing_winner,cardComparing_notwinner)
+        printOneCard(cardComparing_notwinner,notWinner) #show winner card
+        time.sleep(0.5)
+        compare_result(categoryInput,cardComparing_winner,cardComparing_notwinner,winner,winner_this_round)
+
+    time.sleep(0.5)
     print() #empty line
-    if len(cardPile1) != 0:
+    if len(card_winner) != 0:
 
         print("You Win! You have all card in game now!! Well done;)")
         winner = "human"
@@ -194,3 +229,15 @@ while True:
         winner = "bot"
         notWinner = "human"
     input("press enter to return to menu...")
+
+'''
+known bug:
+    only show first card while looping, try move first card to buttom 
+    a pile: [1,2,3,4] --> [1,2,3,4,a]
+    b pile: [a,b,c,d] --> [b,c,d]
+
+    what i want:
+    a pile: [1,2,3,4] ↘     [2,3,4]  [2,3,4,1,a] 
+    comparing:              [1,a] 
+    b pile: [a,b,c,d] ↗     [b,c,d]  [b,c,d]
+'''
